@@ -33,11 +33,6 @@ class ToDoTableViewController: UITableViewController {
 
     // MARK: - Table view data source
 
- /* DELETE THIS FUNCTION
-  override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
-    } */
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
       
@@ -62,15 +57,34 @@ class ToDoTableViewController: UITableViewController {
     }
     
 
-
-    /*
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        //this gives us a single to do item indexed from the row selecte
+        let toDo = toDos[indexPath.row]
+        
+        //use segue identifier to moved to new VC
+        performSegue(withIdentifier: "movetoComplete", sender: toDo)
+    }
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
+    //called right before a segue
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        
+        //reference the AddToDoViewController as the var addVC and the previousVC as this VC
+        if let addVC = segue.destination as? AddToDoViewController {
+            addVC.previousVC = self
+        }
+        
+        //reference CompleteToDoViewController and share data from self and selected to do item class data
+        if let completeVC = segue.destination as? CompleteToDoViewController {
+            if let toDo = sender as? ToDo {
+                completeVC.selectedToDo = toDo
+                completeVC.previousVC = self
+            }
+        }
     }
-    */
+    
 
 }
