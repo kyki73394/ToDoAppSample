@@ -26,6 +26,26 @@ class AddToDoViewController: UIViewController {
     //Add Item button
     @IBAction func addTapped(_ sender: Any) {
         
+        //WITH CORE DATA VERSION--Iteration 3
+        if let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext {
+            
+            //create a ToDoCD object named toDo
+            let toDo = ToDoCD(entity: ToDoCD.entity(), insertInto: context)
+            
+            if let titleText = titleTextField.text {
+                //input for the attributes on CD page
+                toDo.name = titleText
+                toDo.important = importantSwitch.isOn
+            }
+            
+            try? context.save()
+            
+            navigationController?.popViewController(animated: true)
+        }
+        
+        
+        /* WITHOUT CORE DATA VERSION
+        
         //create new object of ToDo() class
         let toDo = ToDo()
         
@@ -42,6 +62,8 @@ class AddToDoViewController: UIViewController {
         
         //return to the vc of the to do list
         navigationController?.popViewController(animated: true)
+         
+        */
     }
     
 

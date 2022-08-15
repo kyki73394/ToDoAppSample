@@ -9,6 +9,7 @@ import UIKit
 
 class ToDoTableViewController: UITableViewController {
     
+    /* from iterations 1-2
     //create new objects of the ToDo class and return in an array (to be added to the to do list)
     func createToDos() -> [ToDo] {
         let swift = ToDo()
@@ -20,18 +21,37 @@ class ToDoTableViewController: UITableViewController {
         
         return [swift, dog]
     }
+    */
     
-    //initialize array of objects of the ToDo class
-    var toDos : [ToDo] = []
+    //initialize array of objects of the ToDos from Core Data
+    var toDos : [ToDoCD] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        /* from iterations 1-2
         //on load, assign the array to the two items from the first function
         toDos = createToDos()
+        */
+        
     }
-
+    
     // MARK: - Table view data source
+    
+    //from iteration 3
+    func getToDos() {
+      if let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext {
+
+        if let coreDataToDos = try? context.fetch(ToDoCD.fetchRequest()) as? [ToDoCD] {
+                toDos = coreDataToDos
+                tableView.reloadData()
+        }
+      }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        getToDos()
+    }
 
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -46,11 +66,12 @@ class ToDoTableViewController: UITableViewController {
         //access one toDo from the array toDos
         let toDo = toDos[indexPath.row]
         
-        if toDo.important {
-            cell.textLabel?.text = "!" + toDo.name
-
-        } else {
-            cell.textLabel?.text = toDo.name
+        if let name = toDo.name {
+            if toDo.important {
+                cell.textLabel?.text = "!" + name
+            } else {
+                cell.textLabel?.text = toDo.name
+            }
         }
 
         return cell
@@ -65,6 +86,7 @@ class ToDoTableViewController: UITableViewController {
         //use segue identifier to moved to new VC
         performSegue(withIdentifier: "movetoComplete", sender: toDo)
     }
+
     
     // MARK: - Navigation
 
@@ -79,7 +101,7 @@ class ToDoTableViewController: UITableViewController {
         
         //reference CompleteToDoViewController and share data from self and selected to do item class data
         if let completeVC = segue.destination as? CompleteToDoViewController {
-            if let toDo = sender as? ToDo {
+            if let toDo = sender as? ToDoCD {
                 completeVC.selectedToDo = toDo
                 completeVC.previousVC = self
             }
