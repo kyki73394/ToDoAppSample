@@ -9,6 +9,8 @@ import UIKit
 
 class ToDoTableViewController: UITableViewController {
     
+    //App tutorial from KWK Mobile App Camp 2022 curriculum
+    
     /* from iterations 1-2
     //create new objects of the ToDo class and return in an array (to be added to the to do list)
     func createToDos() -> [ToDo] {
